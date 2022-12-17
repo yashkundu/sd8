@@ -1,0 +1,30 @@
+{
+  "name": "sd8",
+  "version": "1.0.0",
+  "description": "A service discovery.",
+  "main": "./build/index.js",
+  "homepage": "https://github.com/yashkundu/sd8#readme",
+  "files": [
+    "build/**/*"
+  ],
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yashkundu/sd8"
+  },
+  "keywords": [
+    "discovery",
+    "microservices",
+    "etcd",
+    "service-discovery",
+    "service-registry"
+  ],
+  "author": "yashkundu",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.11.16"
+  },
+  "dependencies": {
+    "etcd3": "^1.1.0"
+  }
+}
