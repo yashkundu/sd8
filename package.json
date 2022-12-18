@@ -1,7 +1,7 @@
 {
   "name": "sd8",
   "version": "1.0.0",
-  "description": "A service discovery.",
+  "description": "A server-side service discovery package which can be used in any nodejs microservice to provide functionalities like dynamic name resolution (resolving service-name to its address), health checking and failure detection.",
   "main": "./build/index.js",
   "homepage": "https://github.com/yashkundu/sd8#readme",
   "files": [
