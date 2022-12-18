@@ -1,10 +1,12 @@
 import { Etcd3 } from "etcd3"
 import { EventEmitter } from "events"
+import { getServiceKey, COMMON_PREFIX } from "../utils"
+
 
 const watchOne = async (serviceName: string, etcd:Etcd3) => {
     const watcher = new EventEmitter()
     try {
-        const etcdWatcher = await etcd.watch().key(serviceName).create()
+        const etcdWatcher = await etcd.watch().key(getServiceKey(serviceName)).create()
         etcdWatcher.on('put', (kv) => {
             watcher.emit('put', kv)
         }).on('delete', (kv) => {
@@ -21,7 +23,7 @@ const watchOne = async (serviceName: string, etcd:Etcd3) => {
 const watchAll = async (etcd:Etcd3) => {
     const watcher = new EventEmitter()
     try {
-        const etcdWatcher = await etcd.watch().prefix("sd8/").create()
+        const etcdWatcher = await etcd.watch().prefix(COMMON_PREFIX).create()
         etcdWatcher.on('put', (kv) => {
             watcher.emit('put', kv)
         }).on('delete', (kv) => {

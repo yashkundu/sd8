@@ -1,5 +1,5 @@
 import { Etcd3 } from "etcd3"
-
+import { getServiceKey } from "../utils"
 
 const register = async (serviceName: string, url: string,  ttl: number, delta: number, etcd: Etcd3) => {
 
@@ -10,7 +10,7 @@ const register = async (serviceName: string, url: string,  ttl: number, delta: n
     const registerServiceWithLease = async () => {
         try {
             const lease = etcd.lease(ttl as number, {autoKeepAlive: false})
-            await lease.put(serviceName).value(url).exec()
+            await lease.put(getServiceKey(serviceName)).value(url).exec()
 
             const keepAlive = async () => {
                 try {

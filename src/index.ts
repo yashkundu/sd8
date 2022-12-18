@@ -5,6 +5,7 @@ import { getOne, getAll } from "./controllers/get";
 import { watchOne as watchOneService, watchAll as watchAllServices } from "./controllers/watch";
 import { Sd8Opts, Handler } from "./interfaces";
 import { putHandlerGenerator, deleteHandlerGenerator } from "./handlers";
+import { getServiceKey } from "./utils";
 
 
 class Sd8 {
@@ -19,7 +20,7 @@ class Sd8 {
 
     dns = {
         resolve: (serviceName: string) => {
-            const serviceUrl = this.serviceRegistry.get(serviceName)
+            const serviceUrl = this.serviceRegistry.get(getServiceKey(serviceName))
             if(!serviceUrl) throw new Error('Cannot resolve the service name')
             return serviceUrl
         }
@@ -28,10 +29,6 @@ class Sd8 {
     private get serviceRegistry() {
         if(!this._serviceRegistry) this._serviceRegistry = new Registry()
         return this._serviceRegistry
-    };
-
-    private getServiceName() {
-        return ("Sd8/" + this.serviceName)
     };
 
     constructor(opts: Sd8Opts) {
@@ -52,13 +49,13 @@ class Sd8 {
         if(!ttl) ttl = 0
         if(!this.serviceUrl) throw new Error('Service url not provided.')
         if(!this.serviceName) throw new Error('Service name not provided.')
-        await registerService(this.getServiceName(), this.serviceUrl, ttl, 5, this.etcd)
+        await registerService(this.serviceName, this.serviceUrl, ttl, 5, this.etcd)
     }
 
     async watchOne(serviceName: string, handler?: Handler) {
         if(!handler) handler = {}
         const serviceUrl = await getOne(serviceName, this.etcd)
-        this.serviceRegistry.put(serviceName, serviceUrl as string)
+        this.serviceRegistry.put(getServiceKey(serviceName), serviceUrl as string)
 
         const emitter = await watchOneService(serviceName, this.etcd)
         emitter.on('put', putHandlerGenerator(handler, this.serviceRegistry))
